@@ -1,0 +1,87 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model Shop {
+  id            Int           @id   @default(autoincrement())
+  shop_name     String
+  shop_address  String
+  users         User[]
+  repairs       Repair[]
+  customers     Customer[]
+}
+
+
+model User {
+  id          Int           @id   @default(autoincrement())
+  first_name  String? 
+  last_name   String? 
+  profile_img String?       
+  email       String        @unique
+  password    String
+  shop        Shop?         @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  shopId      Int
+  repairs     Repair[]
+  role        ROLE
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@map("users")
+}
+
+enum ROLE {
+  SUPERUSER
+  ADMIN
+  STAFF
+  TECHNICIAN
+}
+
+model Repair {
+  id            Int            @id   @default(autoincrement())
+  device        String
+  serial_number String
+  brand         String
+  description   String
+  createdBy     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        Int           
+  customer      Customer?     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  customerId    Int
+  shop          Shop          @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  shopId        Int
+  workflow      Workflow?
+}
+
+model Workflow {
+  id            Int            @id   @default(autoincrement())
+  status        Int            @default(1)
+  repair        Repair         @relation(fields: [repairId], references: [id], onDelete: Cascade)
+  repairId      Int            @unique     
+  note          String?        @db.Text()
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt       
+}
+
+
+model Customer {
+  id          Int           @id   @default(autoincrement())
+  first_name  String? 
+  last_name   String? 
+  email       String?       @unique
+  phoneNumber String
+  repair      Repair[]
+  shop        Shop          @relation(fields: [shopId], references: [id], onDelete: Cascade)        
+  shopId      Int
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@map("customers")
+}

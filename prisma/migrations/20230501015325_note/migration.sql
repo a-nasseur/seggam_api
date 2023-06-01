@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Workflow" ALTER COLUMN "note" DROP NOT NULL,
+ALTER COLUMN "note" SET DATA TYPE TEXT;

@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Workflow" ALTER COLUMN "note" SET DATA TYPE CHAR;
