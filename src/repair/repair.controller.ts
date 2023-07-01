@@ -4,7 +4,7 @@ import { RepairService } from "./repair.service";
 import { RepairDto } from "src/dto/repair.dto";
 
 
-@UseGuards(JwtGuard)
+// @UseGuards(JwtGuard)
 @Controller('repairs')
 export class RepairController {
     // Getting the services
